@@ -651,3 +651,15 @@ gate_sigmoid_mul:
     - [512, 12288, contiguous]
     - [4096, 12288, split_gate]
   shape_desc: "tokens, width, gate_layout"
+
+deep_gemm_fp8_o_proj:
+  shapes:
+    - [1, 8, 4096, 1024]
+    - [16, 8, 4096, 1024]
+    - [128, 8, 4096, 1024]
+    - [4096, 8, 4096, 1024]
+    - [1, 16, 4096, 1024]
+    - [16, 16, 4096, 1024]
+    - [128, 16, 4096, 1024]
+    - [4096, 16, 4096, 1024]
+  shape_desc: "tokens, n_groups, group_dim, o_lora_rank"
