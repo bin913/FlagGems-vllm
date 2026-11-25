@@ -1888,6 +1888,28 @@ ops:
   - MoE
   stages:
   - stable: '4.2'
+- id: moe_wna16_marlin_gemm
+  description: 'Weight-only quantized (WNA16) Marlin MoE GEMM matching vLLM
+    0.32.0 moe_wna16_marlin_gemm. Consumes vLLM Marlin-repacked GPTQ/AWQ
+    4/8-bit experts, the expert-sorted token list from moe_align_block_size,
+    and produces (size_m * top_k, size_n). Supports fp16/bf16 activations,
+    group size -1/32/64/128, bias and mul_topk_weights. The H100 path
+    dequantizes the experts once into a bounded cache and runs a plain
+    grouped GEMM.
+
+    '
+  for:
+  - vllm._custom_ops.moe_wna16_marlin_gemm
+  - torch.ops._moe_C.moe_wna16_marlin_gemm
+  labels:
+  - fused
+  - vLLM
+  - MoE
+  - Quantization
+  kind:
+  - Quantization
+  stages:
+  - beta: '5.5'
 - id: mrope
   description: 'Applies multi-modal rotary positional embeddings to query and key
     tensors,

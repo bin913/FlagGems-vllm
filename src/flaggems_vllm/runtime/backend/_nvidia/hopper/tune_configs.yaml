@@ -173,3 +173,25 @@ chunk_kda_fwd_intra_token_parallel:
       - 8
     stages:
       - 1
+
+# Weight-cached Hopper Marlin MoE WNA16 path: plain-dtype GEMM over the
+# dequantized experts. BLOCK_K must divide K (pruned at runtime).
+moe_wna16_marlin_gemm_hopper:
+  - META: {BLOCK_N: 64, BLOCK_K: 64}
+    num_warps: 4
+    num_stages: 3
+  - META: {BLOCK_N: 128, BLOCK_K: 64}
+    num_warps: 4
+    num_stages: 3
+  - META: {BLOCK_N: 256, BLOCK_K: 64}
+    num_warps: 8
+    num_stages: 3
+  - META: {BLOCK_N: 128, BLOCK_K: 128}
+    num_warps: 8
+    num_stages: 3
+  - META: {BLOCK_N: 64, BLOCK_K: 16}
+    num_warps: 4
+    num_stages: 3
+  - META: {BLOCK_N: 128, BLOCK_K: 32}
+    num_warps: 4
+    num_stages: 4

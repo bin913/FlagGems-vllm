@@ -23,10 +23,14 @@ if triton.__version__ >= "3.4":
     from flaggems_vllm.runtime.backend._nvidia.hopper.ops.w8a8_block_matmul import (  # noqa: F401
         w8a8_block_matmul,
     )
+    from flaggems_vllm.runtime.backend._nvidia.hopper.ops.moe_wna16_marlin_gemm import (  # noqa: F401
+        moe_wna16_marlin_gemm,
+    )
 
 __all__ = [
     "deep_gemm_fp8_o_proj",
     "w8a8_block_matmul",
+    "moe_wna16_marlin_gemm",
 ]
 
 if _triton_version_utils.has_triton_tle(3, 6, 0):

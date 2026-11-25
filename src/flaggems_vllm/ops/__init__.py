@@ -188,6 +188,7 @@ from flaggems_vllm.ops.moe_align_block_size import (
     moe_align_block_size_triton,
 )
 from flaggems_vllm.ops.moe_sum import moe_sum
+from flaggems_vllm.ops.moe_wna16_marlin_gemm import moe_wna16_marlin_gemm
 from flaggems_vllm.ops.marlin_gemm import marlin_gemm
 from flaggems_vllm.ops.mrope import mrope
 from flaggems_vllm.ops.mul import mul, mul_
@@ -422,6 +423,7 @@ __all__ = [
     "moe_align_block_size_no_tle",
     "moe_align_block_size_triton",
     "moe_sum",
+    "moe_wna16_marlin_gemm",
     "mrope",
     "mul",
     "mul_",

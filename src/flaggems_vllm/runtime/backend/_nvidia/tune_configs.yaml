@@ -2020,3 +2020,16 @@ flash_mla_sparse_fwd:
   - META: {BK: 64, BH: 64}
     num_warps: 8
     num_stages: 4
+
+# Generic (fused, no weight cache) Marlin MoE WNA16 GEMM. BLOCK_K is fixed at 16
+# by the elementwise Marlin decoder, so only N tiles are tuned.
+moe_wna16_marlin_gemm:
+  - META: {BLOCK_N: 64}
+    num_warps: 4
+    num_stages: 3
+  - META: {BLOCK_N: 128}
+    num_warps: 4
+    num_stages: 3
+  - META: {BLOCK_N: 256}
+    num_warps: 8
+    num_stages: 3
