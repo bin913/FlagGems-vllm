@@ -42,7 +42,12 @@ def make_cos_sin(max_pos, rot_dim, device):
 
 
 def make_inputs(shape, device, mla_dtype="bfloat16"):
-    """vLLM-shaped inputs; the trailing dict becomes the op kwargs."""
+    """vLLM-shaped inputs; the trailing dict becomes the op kwargs.
+
+    The operator keeps one interface for both MLA-cache write paths. The
+    benchmark times each path separately under the same op name, selecting the
+    baseline row with ``Benchmark.base_variant`` ("bf16" / "fp8").
+    """
     num_tokens, q_lora, kv_lora, rope_dim, index_dim = shape
     pos = torch.arange(num_tokens, device=device, dtype=torch.int64) % MAX_POS
     q_c = torch.randn(num_tokens, q_lora, device=device, dtype=torch.bfloat16)
@@ -112,38 +117,28 @@ class FusedNormRopeBenchmark(base.Benchmark):
             yield make_inputs(shape, self.device, self.mla_dtype)
 
 
-class FusedNormRopeFp8Benchmark(FusedNormRopeBenchmark):
-    """The per-tensor FP8 MLA cache path writes half the KV bytes."""
-
-    mla_dtype = "fp8"
-
-    def set_shapes(self, shape_file_path=None):
-        self.shapes = [
-            (1, 1536, 512, 64, 128),
-            (17, 1536, 512, 64, 128),
-            (512, 1536, 512, 64, 128),
-            (4096, 1536, 512, 64, 128),
-        ]
-        self.shape_desc = "num_tokens, q_lora, kv_lora, rope_dim, index_head_dim"
-
-
 @pytest.mark.fused_norm_rope
 def test_perf_fused_norm_rope():
+    """Default BF16 MLA-cache write path."""
     bench = FusedNormRopeBenchmark(
         op_name="fused_norm_rope",
         torch_op=vllm_fused_norm_rope,
         gems_op=flaggems_vllm.fused_norm_rope,
         dtypes=[torch.bfloat16],
     )
+    bench.base_variant = "bf16"
     bench.run()
 
 
 @pytest.mark.fused_norm_rope
-def test_perf_fused_norm_rope_fp8_mla():
-    bench = FusedNormRopeFp8Benchmark(
-        op_name="fused_norm_rope_fp8_mla",
+def test_perf_fused_norm_rope_fp8_cache():
+    """Per-tensor FP8 MLA-cache write path of the same operator interface."""
+    bench = FusedNormRopeBenchmark(
+        op_name="fused_norm_rope",
         torch_op=vllm_fused_norm_rope,
         gems_op=flaggems_vllm.fused_norm_rope,
         dtypes=[torch.bfloat16],
+        mla_dtype="fp8",
     )
+    bench.base_variant = "fp8"
     bench.run()
