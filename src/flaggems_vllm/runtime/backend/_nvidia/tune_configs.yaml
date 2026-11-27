@@ -2020,3 +2020,17 @@ flash_mla_sparse_fwd:
   - META: {BK: 64, BH: 64}
     num_warps: 8
     num_stages: 4
+
+# Q RMSNorm / KV RMSNorm+RoPE / indexer-K LayerNorm+RoPE in one launch. The
+# programs are small (1-2 K elements per token) so only the launch resources
+# are worth tuning; per-token work is memory bound.
+fused_norm_rope:
+  - META: {}
+    num_warps: 2
+    num_stages: 1
+  - META: {}
+    num_warps: 4
+    num_stages: 1
+  - META: {}
+    num_warps: 8
+    num_stages: 1

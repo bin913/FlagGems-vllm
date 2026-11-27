@@ -173,3 +173,18 @@ chunk_kda_fwd_intra_token_parallel:
       - 8
     stages:
       - 1
+
+# Hopper fused_norm_rope: 3-program grid (Q / KV+MLA / indexer+top-k). Each
+# program owns one token row and parallelism comes from the number of programs,
+# so the narrowest CTA wins the H100 sweep at every measured token count
+# (1/17/512/4096); 2/4 warps are kept as the measured comparison set.
+fused_norm_rope_hopper:
+  - META: {}
+    num_warps: 1
+    num_stages: 1
+  - META: {}
+    num_warps: 2
+    num_stages: 1
+  - META: {}
+    num_warps: 4
+    num_stages: 1

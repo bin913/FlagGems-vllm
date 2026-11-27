@@ -1117,6 +1117,24 @@ ops:
   - NeuralNetwork
   stages:
   - beta: '5.3'
+- id: fused_norm_rope
+  description: |
+    DeepSeek-V3.2 (DSA) preprocessing in one launch: Q RMSNorm, KV RMSNorm plus
+    interleaved RoPE with a fused concat-and-cache MLA insert (bf16, per-tensor
+    FP8 or fp8_ds_mla), indexer-K LayerNorm plus RoPE (interleaved or NeoX) plus
+    UE8M0 FP8 quantization and packed indexer-cache insert, and the top-k buffer
+    clear. The generic kernel keeps the vLLM 2D (token, part) grid; the Hopper
+    backend narrows it to (token, 3) and vectorizes the interleaved RoPE.
+  for:
+    - vllm.models.deepseek_v32.common.kernels.fused_norm_rope
+  labels:
+    - fused
+    - vLLM
+    - DeepSeekV3.2
+  kind:
+    - NeuralNetwork
+  stages:
+    - alpha: '5.4'
 - id: fused_q
   description: |
     Fuse MQA query RoPE and FP8 packing with indexer query RoPE,

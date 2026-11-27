@@ -265,6 +265,7 @@ from flaggems_vllm.ops.fp32_router_gemm import fp32_router_gemm
 from flaggems_vllm.ops.fused_minimax_m3_qknorm_rope_kv_insert import (
     fused_minimax_m3_qknorm_rope_kv_insert,
 )
+from flaggems_vllm.ops.fused_norm_rope import fused_norm_rope
 from flaggems_vllm.ops.kda_bounded import (
     chunk_kda_with_safe_gate,
     fused_recurrent_kda,
@@ -369,6 +370,7 @@ __all__ = [
     "fused_marlin_moe",
     "fused_matmul_reduce_scatter",
     "fused_minimax_m3_qknorm_rope_kv_insert",
+    "fused_norm_rope",
     "fused_q",
     "fused_q_kv_rmsnorm",
     "fused_recurrent_gated_delta_rule_fwd",

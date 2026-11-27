@@ -20,12 +20,16 @@ if triton.__version__ >= "3.4":
     from flaggems_vllm.runtime.backend._nvidia.hopper.ops.deep_gemm_fp8_o_proj import (  # noqa: F401
         deep_gemm_fp8_o_proj,
     )
+    from flaggems_vllm.runtime.backend._nvidia.hopper.ops.fused_norm_rope import (  # noqa: F401
+        fused_norm_rope,
+    )
     from flaggems_vllm.runtime.backend._nvidia.hopper.ops.w8a8_block_matmul import (  # noqa: F401
         w8a8_block_matmul,
     )
 
 __all__ = [
     "deep_gemm_fp8_o_proj",
+    "fused_norm_rope",
     "w8a8_block_matmul",
 ]
 
